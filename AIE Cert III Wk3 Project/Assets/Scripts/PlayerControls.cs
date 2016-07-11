@@ -8,14 +8,16 @@ public class PlayerControls : MonoBehaviour
 	float playerSpeed = 100f;
 	float speedCap = 125f;
 	float playerAccel = 20f;
-	float playerFrict = 1.5f;
+	float jumpForce = 1000f;
 
 	bool moving = false;
 
-	bool fwd = false;
-	bool bwd = false;
-	bool left = false;
-	bool right = false;
+	bool grounded = false;
+
+	//bool fwd = false;
+	//bool bwd = false;
+	//bool left = false;
+	//bool right = false;
 
 	// Use this for initialization
 	void Start ()
@@ -26,6 +28,15 @@ public class PlayerControls : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		if (Physics.Raycast (transform.position, -transform.up, 2))
+		{
+			grounded = true;
+		}
+		else
+		{
+			grounded = false;
+		}
+
 		if (moving)
 		{
 			playerSpeed += playerAccel;
@@ -50,7 +61,6 @@ public class PlayerControls : MonoBehaviour
 			//transform.position += transform.forward * playerSpeed * Time.deltaTime; <-- This is the old way of moving
 			rb.velocity += transform.forward * playerSpeed * Time.deltaTime;
 
-			fwd = true;
 			moving = true;
 		}
 
@@ -59,7 +69,6 @@ public class PlayerControls : MonoBehaviour
 			//transform.position -= transform.right * playerSpeed * Time.deltaTime; <-- This is the old way of moving
 			rb.velocity -= transform.right * playerSpeed * Time.deltaTime;
 
-			left = true;
 			moving = true;
 		}
 
@@ -68,7 +77,6 @@ public class PlayerControls : MonoBehaviour
 			//transform.position -= transform.forward * playerSpeed * Time.deltaTime; <-- This is the old way of moving
 			rb.velocity -= transform.forward * playerSpeed * Time.deltaTime;
 
-			bwd = true;
 			moving = true;
 		}
 
@@ -77,8 +85,12 @@ public class PlayerControls : MonoBehaviour
 			//transform.position += transform.right * playerSpeed * Time.deltaTime; <-- This is the old way of moving
 			rb.velocity += transform.right * playerSpeed * Time.deltaTime;
 
-			right = true;
 			moving = true;
+		}
+
+		if (Input.GetKeyDown (KeyCode.Space))
+		{
+			rb.AddForce (transform.up * jumpForce * Time.deltaTime, ForceMode.Impulse);
 		}
 
 		if ((!Input.GetKey (KeyCode.W)) && (!Input.GetKey (KeyCode.A)) && (!Input.GetKey (KeyCode.S)) && (!Input.GetKey (KeyCode.D)))
