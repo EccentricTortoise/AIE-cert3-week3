@@ -9,8 +9,8 @@ public class PlayerControls : MonoBehaviour
 	float speedCap = 125f;
 	float playerAccel = 20f;
 
-	float jumpForce = 1500f;
-	float gravForce = 100f;
+	float jumpForce = 1200f;
+	float gravForce = 75f;
 
 	bool moving = false;
 
