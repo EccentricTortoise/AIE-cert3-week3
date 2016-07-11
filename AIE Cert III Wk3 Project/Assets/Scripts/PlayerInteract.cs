@@ -4,10 +4,14 @@ using System.Collections;
 public class PlayerInteract : MonoBehaviour {
 
 	PlayerWeapon playerWeapon;
+
 	public GameObject pistolPrefab;
 	public GameObject machineGunPrefab;
+    public GameObject knifePrefab;
 
     GameObject gunToInstantiate;
+
+    int maxReachDist = 5;
 
 	// Use this for initialization
 	void Start ()
@@ -19,7 +23,7 @@ public class PlayerInteract : MonoBehaviour {
     {
         float dist = Vector3.Distance(hit.collider.gameObject.transform.position, transform.position);
 
-        if (dist < 20)
+        if (dist < maxReachDist)
         {
             playerWeapon.weapon = weaponToSwitchTo;
             Destroy(hit.collider.gameObject);
@@ -40,6 +44,10 @@ public class PlayerInteract : MonoBehaviour {
             case 1:
                 gunToInstantiate = machineGunPrefab;
                 break;
+
+            case 2:
+                gunToInstantiate = knifePrefab;
+                break;
         }
 
 		if (Input.GetKeyDown(KeyCode.E))
@@ -58,7 +66,12 @@ public class PlayerInteract : MonoBehaviour {
 				{
                     SwitchWeapon(hit, 1);
                 }
-			}
+
+                else if (hit.collider.gameObject == GameObject.FindGameObjectWithTag("PickupKnife"))
+                {
+                    SwitchWeapon(hit, 2);
+                }
+            }
 		}
 	}
 }

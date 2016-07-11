@@ -7,10 +7,12 @@ public class PlayerWeapon : MonoBehaviour {
     /*
         0 = pistol
         1 = machine gun
+        2 = knife
     */
 
 	public GameObject pistol;
 	public GameObject machineGun;
+    public GameObject knife;
 
 	// Use this for initialization
 	void Start ()
@@ -26,12 +28,20 @@ public class PlayerWeapon : MonoBehaviour {
 			case 0:
 				pistol.SetActive (true);
 				machineGun.SetActive (false);
-				break;
+                knife.SetActive(false);
+                break;
 
 			case 1:
 				pistol.SetActive (false);
 				machineGun.SetActive (true);
-				break;
+                knife.SetActive(false);
+                break;
+
+            case 2:
+                pistol.SetActive(false);
+                machineGun.SetActive(false);
+                knife.SetActive(true);
+                break;
 		}
 	}
 }
