@@ -8,7 +8,9 @@ public class PlayerControls : MonoBehaviour
 	float playerSpeed = 100f;
 	float speedCap = 125f;
 	float playerAccel = 20f;
-	float jumpForce = 1000f;
+
+	float jumpForce = 1500f;
+	float gravForce = 100f;
 
 	bool moving = false;
 
@@ -56,6 +58,11 @@ public class PlayerControls : MonoBehaviour
 			}
 		}
 
+		if (!grounded)
+		{
+			rb.velocity -= transform.up * gravForce * Time.deltaTime;
+		}
+
 		if (Input.GetKey (KeyCode.W))
 		{
 			//transform.position += transform.forward * playerSpeed * Time.deltaTime; <-- This is the old way of moving
@@ -90,7 +97,10 @@ public class PlayerControls : MonoBehaviour
 
 		if (Input.GetKeyDown (KeyCode.Space))
 		{
-			rb.AddForce (transform.up * jumpForce * Time.deltaTime, ForceMode.Impulse);
+			if (grounded)
+			{
+				rb.AddForce (transform.up * jumpForce * Time.deltaTime, ForceMode.Impulse);
+			}
 		}
 
 		if ((!Input.GetKey (KeyCode.W)) && (!Input.GetKey (KeyCode.A)) && (!Input.GetKey (KeyCode.S)) && (!Input.GetKey (KeyCode.D)))
@@ -102,5 +112,6 @@ public class PlayerControls : MonoBehaviour
 	void OnGUI()
 	{
 		GUI.TextField (new Rect (10, 10, 200, 20), "spd " + playerSpeed, 100);
+		GUI.TextField (new Rect (10, 31, 200, 22), "grounded " + grounded, 100);
 	}
 }
