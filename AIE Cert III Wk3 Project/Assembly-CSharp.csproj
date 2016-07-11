@@ -48,8 +48,9 @@
      <Compile Include="Assets\Scripts\LockCursor.cs" />
      <Compile Include="Assets\Scripts\PlayerCamera.cs" />
      <Compile Include="Assets\Scripts\PlayerControls.cs" />
+     <Compile Include="Assets\Scripts\PlayerInteract.cs" />
      <Compile Include="Assets\Scripts\PlayerShoot.cs" />
-     <None Include="Assets\Art\weaponPack_assets\License.txt" />
+     <Compile Include="Assets\Scripts\PlayerWeapon.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
