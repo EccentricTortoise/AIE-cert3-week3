@@ -5,32 +5,38 @@ public class PlayerControls : MonoBehaviour
 {
 	public Rigidbody rb;
 
-	float playerSpeed = 0f;
-	float speedCap = 15f;
-	float playerAccel = 1f;
-	float playerFrict = 1.5f;
+	float playerSpeed = 100f;
+	float speedCap = 125f;
+	float playerAccel = 20f;
+	float jumpForce = 1000f;
 
 	bool moving = false;
 
-	bool fwd = false;
-	bool bwd = false;
-	bool left = false;
-	bool right = false;
+	bool grounded = false;
+
+	//bool fwd = false;
+	//bool bwd = false;
+	//bool left = false;
+	//bool right = false;
 
 	// Use this for initialization
 	void Start ()
 	{
 		rb = GetComponent<Rigidbody> ();
 	}
-
-	void OnCollisionEnter (Collision coll)
-	{
-		
-	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
+		if (Physics.Raycast (transform.position, -transform.up, 2))
+		{
+			grounded = true;
+		}
+		else
+		{
+			grounded = false;
+		}
+
 		if (moving)
 		{
 			playerSpeed += playerAccel;
@@ -42,73 +48,49 @@ public class PlayerControls : MonoBehaviour
 		}
 		else
 		{
-			playerSpeed -= playerFrict;
+			playerSpeed -= playerAccel;
 
 			if (playerSpeed <= 0)
 			{
 				playerSpeed = 0;
 			}
-
-			if (playerSpeed > 0)
-			{
-				if (fwd)
-				{
-					//transform.position += transform.forward * playerSpeed * Time.deltaTime;
-				}
-
-				if (left)
-				{
-					transform.position -= transform.right * playerSpeed * Time.deltaTime;
-				}
-
-				if (bwd)
-				{
-					transform.position -= transform.forward * playerSpeed * Time.deltaTime;
-				}
-
-				if (right)
-				{
-					transform.position += transform.right * playerSpeed * Time.deltaTime;
-				}
-			}
-			else
-			{
-				fwd = false;
-				bwd = false;
-				left = false;
-				right = false;
-			}
 		}
 
 		if (Input.GetKey (KeyCode.W))
 		{
-			//transform.position += transform.forward * playerSpeed * Time.deltaTime;
+			//transform.position += transform.forward * playerSpeed * Time.deltaTime; <-- This is the old way of moving
+			rb.velocity += transform.forward * playerSpeed * Time.deltaTime;
 
-			rb.AddForce (transform.forward * 1000 * Time.deltaTime);
-
-			fwd = true;
 			moving = true;
 		}
 
 		if (Input.GetKey (KeyCode.A))
 		{
-			transform.position -= transform.right * playerSpeed * Time.deltaTime;
-			left = true;
+			//transform.position -= transform.right * playerSpeed * Time.deltaTime; <-- This is the old way of moving
+			rb.velocity -= transform.right * playerSpeed * Time.deltaTime;
+
 			moving = true;
 		}
 
 		if (Input.GetKey (KeyCode.S))
 		{
-			transform.position -= transform.forward * playerSpeed * Time.deltaTime;
-			bwd = true;
+			//transform.position -= transform.forward * playerSpeed * Time.deltaTime; <-- This is the old way of moving
+			rb.velocity -= transform.forward * playerSpeed * Time.deltaTime;
+
 			moving = true;
 		}
 
 		if (Input.GetKey (KeyCode.D))
 		{
-			transform.position += transform.right * playerSpeed * Time.deltaTime;
-			right = true;
+			//transform.position += transform.right * playerSpeed * Time.deltaTime; <-- This is the old way of moving
+			rb.velocity += transform.right * playerSpeed * Time.deltaTime;
+
 			moving = true;
+		}
+
+		if (Input.GetKeyDown (KeyCode.Space))
+		{
+			rb.AddForce (transform.up * jumpForce * Time.deltaTime, ForceMode.Impulse);
 		}
 
 		if ((!Input.GetKey (KeyCode.W)) && (!Input.GetKey (KeyCode.A)) && (!Input.GetKey (KeyCode.S)) && (!Input.GetKey (KeyCode.D)))
