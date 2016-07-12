@@ -6,7 +6,7 @@ public class PlayerControls : MonoBehaviour
 	public Rigidbody rb;
 
 	float playerSpeed = 100f;
-	float speedCap = 125f;
+	float speedCap = 85f;
 	float playerAccel = 20f;
 
 	float jumpForce = 1200f;
