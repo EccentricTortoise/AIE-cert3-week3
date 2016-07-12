@@ -10,7 +10,7 @@ public class PlayerControls : MonoBehaviour
 	float playerAccel = 20f;
 
 	float jumpForce = 1200f;
-	float gravForce = 75f;
+	float gravForce = 95f;
 
 	bool moving = false;
 
@@ -99,7 +99,8 @@ public class PlayerControls : MonoBehaviour
 		{
 			if (grounded)
 			{
-				rb.AddForce (transform.up * jumpForce * Time.deltaTime, ForceMode.Impulse);
+                //rb.AddForce (transform.up * jumpForce * Time.deltaTime, ForceMode.Impulse);
+                rb.velocity += transform.up * jumpForce * Time.deltaTime;
 			}
 		}
 
