@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DamageEnemy : MonoBehaviour {
 
-    float health = 100;
+    float health = 60;
 
     public Transform player;
 
@@ -30,6 +30,6 @@ public class DamageEnemy : MonoBehaviour {
     public void Damage ()
     {
         health -= Random.Range(12, 20);
-        print(health);
+        print("enemy hp " + health);
     }
 }

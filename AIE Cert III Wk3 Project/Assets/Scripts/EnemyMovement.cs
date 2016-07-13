@@ -43,26 +43,56 @@ public class EnemyMovement : MonoBehaviour {
 	
 	void Update ()
     {
-        if (m_Follow == false)
-            return;
+        if (m_Player.GetComponent<DamagePlayer>().health > 0)
+        {
+            if (m_Follow == false)
+                return;
 
-        float distance = (m_Player.transform.position - transform.position).magnitude;
-        if (distance > m_CloseDistance)
-        {
-            //Debug.Log("Following Player");
-            //Debug.Log(m_Player.transform.position);
-            m_NavAgent.SetDestination(m_Player.transform.position);
-            m_NavAgent.Resume();
+            float distance = (m_Player.transform.position - transform.position).magnitude;
+            if (distance > m_CloseDistance)
+            {
+                //Debug.Log("Following Player");
+                //Debug.Log(m_Player.transform.position);
+                m_NavAgent.SetDestination(m_Player.transform.position);
+                m_NavAgent.Resume();
+            }
+            else if (m_NavAgent.transform.position != m_Player.transform.position)
+            {
+                m_NavAgent.SetDestination(m_Player.transform.position);
+                m_NavAgent.Resume();
+            }
+            else
+            {
+                m_NavAgent.Stop();
+            }
+
+            RaycastHit hit;
+
+            //this raycast checks to see if the player is in the enemy's direct line of sight
+            if (Physics.Raycast(transform.position, transform.forward, out hit))
+            {
+                if (hit.collider.gameObject.tag == "Player")
+                {
+                    Shoot();
+                    print("Found you!");
+                }
+            }
         }
-		else if (m_NavAgent.transform.position != m_Player.transform.position)
-		{
-			m_NavAgent.SetDestination(m_Player.transform.position);
-			m_NavAgent.Resume();
-		}
-        else
+    }
+
+    void Shoot()
+    {
+        m_NavAgent.Stop();
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 500))
         {
-            m_NavAgent.Stop();
+            if (hit.collider.gameObject.tag == "Player")
+            {
+                print("Got you!");
+                hit.collider.gameObject.GetComponent<DamagePlayer>().Damage();
+            }
         }
-		
-	}
+    }
 }

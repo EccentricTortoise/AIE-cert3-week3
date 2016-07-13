@@ -25,7 +25,13 @@ public class PlayerWeapon : MonoBehaviour {
 	{
 		switch (weapon)
 		{
-			case 0:
+            case -1:
+                pistol.SetActive(false);
+                machineGun.SetActive(false);
+                knife.SetActive(false);
+                break;
+
+            case 0:
 				pistol.SetActive (true);
 				machineGun.SetActive (false);
                 knife.SetActive(false);

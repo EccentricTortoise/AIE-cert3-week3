@@ -9,7 +9,7 @@ public class PlayerInteract : MonoBehaviour {
 	public GameObject machineGunPrefab;
     public GameObject knifePrefab;
 
-    GameObject gunToInstantiate;
+    public GameObject gunToInstantiate;
 
     int maxReachDist = 5;
 
@@ -57,7 +57,6 @@ public class PlayerInteract : MonoBehaviour {
 			
 			if (Physics.Raycast(ray, out hit))
 			{
-                //if (hit.collider.gameObject == GameObject.FindGameObjectWithTag("PickupPistol"))
                 if (hit.collider.gameObject.tag == "PickupPistol")
                 {
                     SwitchWeapon(hit, 0);
