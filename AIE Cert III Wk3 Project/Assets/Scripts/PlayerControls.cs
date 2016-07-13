@@ -15,6 +15,7 @@ public class PlayerControls : MonoBehaviour
 	bool moving = false;
 
 	bool grounded = false;
+    bool climbing = false;
 
 	//bool fwd = false;
 	//bool bwd = false;
@@ -26,11 +27,27 @@ public class PlayerControls : MonoBehaviour
 	{
 		rb = GetComponent<Rigidbody> ();
 	}
+
+    void OnTriggerEnter(Collider coll)
+    {
+        if (coll.gameObject.tag == "Ladder")
+        {
+            climbing = true;
+        }
+    }
+
+    void OnTriggerExit(Collider coll)
+    {
+        if (coll.gameObject.tag == "Ladder")
+        {
+            climbing = false;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		if (Physics.Raycast (transform.position, -transform.up, 2))
+		if (Physics.Raycast (transform.position, -transform.up, 1.5f))
 		{
 			grounded = true;
 		}
@@ -58,22 +75,27 @@ public class PlayerControls : MonoBehaviour
 			}
 		}
 
-		if (!grounded)
+        if (!grounded && !climbing)
 		{
 			rb.velocity -= transform.up * gravForce * Time.deltaTime;
 		}
 
 		if (Input.GetKey (KeyCode.W))
 		{
-			//transform.position += transform.forward * playerSpeed * Time.deltaTime; <-- This is the old way of moving
-			rb.velocity += transform.forward * playerSpeed * Time.deltaTime;
+            if (!climbing)
+            {
+                rb.velocity += transform.forward * playerSpeed * Time.deltaTime;
+            }
+			else
+            {
+                rb.velocity += transform.up * (playerSpeed / 1.5f) * Time.deltaTime;
+            }
 
 			moving = true;
 		}
 
 		if (Input.GetKey (KeyCode.A))
 		{
-			//transform.position -= transform.right * playerSpeed * Time.deltaTime; <-- This is the old way of moving
 			rb.velocity -= transform.right * playerSpeed * Time.deltaTime;
 
 			moving = true;
@@ -81,15 +103,20 @@ public class PlayerControls : MonoBehaviour
 
 		if (Input.GetKey (KeyCode.S))
 		{
-			//transform.position -= transform.forward * playerSpeed * Time.deltaTime; <-- This is the old way of moving
-			rb.velocity -= transform.forward * playerSpeed * Time.deltaTime;
+            if (!climbing)
+            {
+                rb.velocity -= transform.forward * playerSpeed * Time.deltaTime;
+            }
+            else
+            {
+                rb.velocity -= transform.up * (playerSpeed / 1.5f) * Time.deltaTime;
+            }
 
-			moving = true;
+            moving = true;
 		}
 
 		if (Input.GetKey (KeyCode.D))
 		{
-			//transform.position += transform.right * playerSpeed * Time.deltaTime; <-- This is the old way of moving
 			rb.velocity += transform.right * playerSpeed * Time.deltaTime;
 
 			moving = true;
@@ -99,7 +126,6 @@ public class PlayerControls : MonoBehaviour
 		{
 			if (grounded)
 			{
-                //rb.AddForce (transform.up * jumpForce * Time.deltaTime, ForceMode.Impulse);
                 rb.velocity += transform.up * jumpForce * Time.deltaTime;
 			}
 		}
@@ -114,5 +140,6 @@ public class PlayerControls : MonoBehaviour
 	{
 		GUI.TextField (new Rect (10, 10, 200, 20), "spd " + playerSpeed, 100);
 		GUI.TextField (new Rect (10, 31, 200, 22), "grounded " + grounded, 100);
+        GUI.TextField (new Rect (210, 10, 200, 22), "climbing " + climbing, 100);
 	}
 }

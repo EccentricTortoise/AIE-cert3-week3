@@ -5,30 +5,50 @@ public class PlayerShoot : MonoBehaviour {
 
     float timer = 0f;
     float defTimer = 0.25f;
+    float mFlashTimer = 0f; //timer for muzzle flash
 
     bool rapidFire = false;
 
     PlayerWeapon playerWeapon;
 
+    private GameObject muzzleFlash;
+    public GameObject pistolFlash;
+    public GameObject machineGunFlash;
+
 	// Use this for initialization
 	void Start ()
 	{
         playerWeapon = GetComponent<PlayerWeapon>();
+
+        muzzleFlash = pistolFlash;
+        muzzleFlash.SetActive(false);
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
+        if (mFlashTimer > 0)
+        {
+            mFlashTimer -= Time.deltaTime;
+        }
+        else if (mFlashTimer <= 0)
+        {
+            mFlashTimer = 0;
+            muzzleFlash.SetActive(false);
+        }
+
         switch (playerWeapon.weapon)
         {
             case 0:
                 defTimer = 0.25f;
                 rapidFire = false;
+                muzzleFlash = pistolFlash;
                 break;
 
             case 1:
                 defTimer = 0.05f;
                 rapidFire = true;
+                muzzleFlash = machineGunFlash;
                 break;
 
             case 2:
@@ -43,31 +63,33 @@ public class PlayerShoot : MonoBehaviour {
         {
             if (Input.GetMouseButton(0))
             {
-                if (timer >= defTimer)
-                {
-                    timer = 0;
-                    if (Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f))))
-                    {
-                        print("you hit a wall");
-                    }
-                }
+                Shoot();
             }
         }
         else
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (timer >= defTimer)
-                {
-                    timer = 0;
-                    if (Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f))))
-                    {
-                        print("you hit a wall");
-                    }
-                }
+                Shoot();
             }
         }
 	}
+    
+    void Shoot()
+    {
+        if (timer >= defTimer)
+        {
+            timer = 0;
+
+            mFlashTimer = 0.1f;
+            muzzleFlash.SetActive(true);
+
+            if (Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f))))
+            {
+                print("you hit a wall");
+            }
+        }
+    }
 
     void OnGUI()
     {
