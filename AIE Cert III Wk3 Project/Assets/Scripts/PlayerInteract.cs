@@ -57,17 +57,18 @@ public class PlayerInteract : MonoBehaviour {
 			
 			if (Physics.Raycast(ray, out hit))
 			{
-                if (hit.collider.gameObject == GameObject.FindGameObjectWithTag("PickupPistol"))
+                //if (hit.collider.gameObject == GameObject.FindGameObjectWithTag("PickupPistol"))
+                if (hit.collider.gameObject.tag == "PickupPistol")
                 {
                     SwitchWeapon(hit, 0);
                 }
 
-                else if (hit.collider.gameObject == GameObject.FindGameObjectWithTag ("PickupMachineGun"))
+                else if (hit.collider.gameObject.tag == "PickupMachineGun")
 				{
                     SwitchWeapon(hit, 1);
                 }
 
-                else if (hit.collider.gameObject == GameObject.FindGameObjectWithTag("PickupKnife"))
+                else if (hit.collider.gameObject.tag == "PickupKnife")
                 {
                     SwitchWeapon(hit, 2);
                 }

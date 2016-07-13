@@ -31,13 +31,13 @@ public class EnemyMovement : MonoBehaviour {
 	
 	private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(" Player in range");
+        //Debug.Log(" Player in range");
         m_Follow = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log(" Player out of range");
+        //Debug.Log(" Player out of range");
         m_Follow = true;
     }
 	
@@ -49,8 +49,8 @@ public class EnemyMovement : MonoBehaviour {
         float distance = (m_Player.transform.position - transform.position).magnitude;
         if (distance > m_CloseDistance)
         {
-            Debug.Log("Following Player");
-            Debug.Log(m_Player.transform.position);
+            //Debug.Log("Following Player");
+            //Debug.Log(m_Player.transform.position);
             m_NavAgent.SetDestination(m_Player.transform.position);
             m_NavAgent.Resume();
         }
