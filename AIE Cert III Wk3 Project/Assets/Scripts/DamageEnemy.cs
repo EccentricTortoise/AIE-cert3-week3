@@ -27,9 +27,8 @@ public class DamageEnemy : MonoBehaviour {
         }
 	}
 
-    public void Damage ()
+    public void Damage (float min, float max)
     {
-        health -= Random.Range(12, 20);
-        print("enemy hp " + health);
+        health -= Random.Range(min, max);
     }
 }

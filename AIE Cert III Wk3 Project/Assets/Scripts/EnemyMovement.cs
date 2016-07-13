@@ -11,6 +11,10 @@ public class EnemyMovement : MonoBehaviour {
 	
 	private bool m_Follow;
 
+    float shootDelay = 0;
+
+    float shootSpeed = 0.75f;
+
     private void Awake()
     {
         m_Player = GameObject.FindGameObjectWithTag("Player");
@@ -66,15 +70,27 @@ public class EnemyMovement : MonoBehaviour {
                 m_NavAgent.Stop();
             }
 
-            RaycastHit hit;
-
-            //this raycast checks to see if the player is in the enemy's direct line of sight
-            if (Physics.Raycast(transform.position, transform.forward, out hit))
+            if (shootDelay > 0)
             {
-                if (hit.collider.gameObject.tag == "Player")
+                shootDelay -= Time.deltaTime;
+            }
+            else if (shootDelay < 0)
+            {
+                shootDelay = 0;
+            }
+
+            if (shootDelay == 0)
+            {
+                RaycastHit hit;
+
+                //this raycast checks to see if the player is in the enemy's direct line of sight
+                if (Physics.Raycast(transform.position, transform.forward, out hit))
                 {
-                    Shoot();
-                    print("Found you!");
+                    if (hit.collider.gameObject.tag == "Player")
+                    {
+                        m_NavAgent.Stop();
+                        Shoot();
+                    }
                 }
             }
         }
@@ -82,7 +98,7 @@ public class EnemyMovement : MonoBehaviour {
 
     void Shoot()
     {
-        m_NavAgent.Stop();
+        shootDelay = shootSpeed;
 
         RaycastHit hit;
 

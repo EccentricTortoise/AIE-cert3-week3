@@ -14,6 +14,14 @@ public class PlayerShoot : MonoBehaviour {
     private GameObject muzzleFlash;
     public GameObject pistolFlash;
     public GameObject machineGunFlash;
+    public GameObject sniperFlash;
+
+    float minDmg = 12;
+    float maxDmg = 20;
+
+    public Camera mainCam;
+
+    public Texture scopeImage;
 
 	// Use this for initialization
 	void Start ()
@@ -43,17 +51,31 @@ public class PlayerShoot : MonoBehaviour {
                 defTimer = 0.25f;
                 rapidFire = false;
                 muzzleFlash = pistolFlash;
+                minDmg = 12;
+                maxDmg = 20;
                 break;
 
             case 1:
                 defTimer = 0.05f;
                 rapidFire = true;
                 muzzleFlash = machineGunFlash;
+                minDmg = 7;
+                maxDmg = 15;
                 break;
 
             case 2:
                 defTimer = 0.2f;
                 rapidFire = false;
+                minDmg = 13;
+                maxDmg = 17;
+                break;
+
+            case 3:
+                defTimer = 1.25f;
+                rapidFire = false;
+                muzzleFlash = sniperFlash;
+                minDmg = 95;
+                maxDmg = 100;
                 break;
         }
 
@@ -73,6 +95,19 @@ public class PlayerShoot : MonoBehaviour {
                 Shoot();
             }
         }
+
+        if (playerWeapon.weapon == 3 && Input.GetMouseButton(1))
+        {
+            Camera.main.fieldOfView = 20;
+            GetComponent<PlayerCamera>().sensitivityX = 2.5f;
+            mainCam.GetComponent<PlayerCamera>().sensitivityY = 2.5f;
+        }
+        else
+        {
+            Camera.main.fieldOfView = 60;
+            GetComponent<PlayerCamera>().sensitivityX = 5;
+            mainCam.GetComponent<PlayerCamera>().sensitivityY = 5;
+        }
 	}
     
     void Shoot()
@@ -81,17 +116,34 @@ public class PlayerShoot : MonoBehaviour {
         {
             timer = 0;
 
-            mFlashTimer = 0.1f;
-            muzzleFlash.SetActive(true);
+            if (playerWeapon.weapon != 2)
+            {
+                mFlashTimer = 0.1f;
+                muzzleFlash.SetActive(true);
+            }
 
             RaycastHit hit;
             Ray ray = Camera.main.ViewportPointToRay (new Vector3 (0.5f, 0.5f, 0f));
 
-            if (Physics.Raycast(ray, out hit))
+            if (playerWeapon.weapon != 2)
             {
-                if (hit.collider.gameObject.tag == "Enemy")
+                if (Physics.Raycast(ray, out hit))
                 {
-                    hit.collider.gameObject.GetComponent<DamageEnemy>().Damage();
+                    if (hit.collider.gameObject.tag == "Enemy")
+                    {
+                        hit.collider.gameObject.GetComponent<DamageEnemy>().Damage(minDmg, maxDmg);
+                    }
+                }
+            }
+            else
+            {
+                if (Physics.Raycast(ray, out hit, 4f))
+                {
+                    if (hit.collider.gameObject.tag == "Enemy")
+                    {
+                        print("stab stab");
+                        hit.collider.gameObject.GetComponent<DamageEnemy>().Damage(minDmg, maxDmg);
+                    }
                 }
             }
         }
@@ -101,5 +153,10 @@ public class PlayerShoot : MonoBehaviour {
     {
         GUI.TextField(new Rect(10, 52, 200, 20), "delay " + timer + " (max is " + defTimer + ")", 100);
         GUI.TextField(new Rect(10, 71, 200, 20), "rapidFire " + rapidFire, 100);
+
+        if (playerWeapon.weapon == 3 && Input.GetMouseButton(1))
+        {
+            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), scopeImage);
+        }
     }
 }

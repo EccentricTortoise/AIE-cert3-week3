@@ -8,6 +8,7 @@ public class PlayerInteract : MonoBehaviour {
 	public GameObject pistolPrefab;
 	public GameObject machineGunPrefab;
     public GameObject knifePrefab;
+    public GameObject sniperPrefab;
 
     public GameObject gunToInstantiate;
 
@@ -48,6 +49,10 @@ public class PlayerInteract : MonoBehaviour {
             case 2:
                 gunToInstantiate = knifePrefab;
                 break;
+
+            case 3:
+                gunToInstantiate = sniperPrefab;
+                break;
         }
 
 		if (Input.GetKeyDown(KeyCode.E))
@@ -70,6 +75,11 @@ public class PlayerInteract : MonoBehaviour {
                 else if (hit.collider.gameObject.tag == "PickupKnife")
                 {
                     SwitchWeapon(hit, 2);
+                }
+
+                else if (hit.collider.gameObject.tag == "PickupSniper")
+                {
+                    SwitchWeapon(hit, 3);
                 }
             }
 		}

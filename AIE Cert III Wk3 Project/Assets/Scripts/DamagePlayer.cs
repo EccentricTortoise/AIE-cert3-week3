@@ -6,18 +6,29 @@ public class DamagePlayer : MonoBehaviour {
     public float health = 80;
     public Camera cam;
 
+    public Light lt;
+
+    bool dmgDisplay = false;
+
+    float lightTimer = 0;
+    float invulTimer = 0;
+
+    float invulTime = 0.75f;
+
 	// Use this for initialization
 	void Start ()
     {
 
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
         if (health <= 0)
         {
             health = 0;
+
+            lt.intensity = 8;
 
             //disable scripts
             GetComponent<PlayerControls>().enabled = false;
@@ -33,7 +44,7 @@ public class DamagePlayer : MonoBehaviour {
             GetComponent<Rigidbody>().useGravity = true;
 
             //add force to player, making them fall over
-            GetComponent<Rigidbody>().AddForce(-transform.right * 12000 * Time.deltaTime);
+            GetComponent<Rigidbody>().AddForce(-transform.right * 50000 * Time.deltaTime);
 
             //changes colliders so that the player doesnt roll around
             //GetComponent<BoxCollider>().enabled = true;
@@ -43,13 +54,55 @@ public class DamagePlayer : MonoBehaviour {
 
             GetComponent<PlayerWeapon>().weapon = -1; //removes weapon
 
+            GetComponent<RestartScript>().enabled = true;
+
             this.enabled = false; //disables this script
+        }
+
+        if (invulTimer > 0)
+        {
+            invulTimer -= Time.deltaTime;
+        }
+        else if (invulTimer < 0)
+        {
+            invulTimer = 0;
+        }
+
+        if (dmgDisplay)
+        {
+            if (lightTimer > 0)
+            {
+                lightTimer -= Time.deltaTime;
+
+                lt.color = Color.red;
+                lt.intensity += Time.deltaTime * 40;
+            }
+
+            else if (lightTimer <= 0)
+            {
+                lightTimer = 0;
+
+                lt.intensity -= Time.deltaTime * 40;
+
+                if (lt.intensity < 1)
+                {
+                    lt.intensity = 1;
+                    lt.color = new Color32(255, 244, 214, 255); //the default yellowish light color
+                    dmgDisplay = false;
+                }
+            }
         }
     }
 
     public void Damage ()
     {
-        health -= Random.Range(15, 20);
-        print("player hp " + health);
+        if (invulTimer == 0)
+        {
+            health -= Random.Range(15, 20);
+            invulTimer = invulTime;
+
+            dmgDisplay = true;
+            lightTimer = 0.06f;
+        }
     }
 }
