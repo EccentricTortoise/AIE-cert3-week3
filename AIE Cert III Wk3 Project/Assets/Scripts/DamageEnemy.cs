@@ -3,9 +3,7 @@ using System.Collections;
 
 public class DamageEnemy : MonoBehaviour {
 
-    float health = 60;
-
-    public Transform player;
+    float health = 45;
 
     public GameObject deadEnemy;
 

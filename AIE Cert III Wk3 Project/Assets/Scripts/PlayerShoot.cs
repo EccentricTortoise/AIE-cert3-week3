@@ -15,6 +15,9 @@ public class PlayerShoot : MonoBehaviour {
     public GameObject pistolFlash;
     public GameObject machineGunFlash;
     public GameObject sniperFlash;
+    public GameObject grenadeLauncherFlash;
+
+    public GameObject grenadeLauncherAmmo;
 
     float minDmg = 12;
     float maxDmg = 20;
@@ -77,6 +80,14 @@ public class PlayerShoot : MonoBehaviour {
                 minDmg = 95;
                 maxDmg = 100;
                 break;
+
+            case 4:
+                defTimer = 1.2f;
+                rapidFire = false;
+                muzzleFlash = grenadeLauncherFlash;
+                minDmg = 95;
+                maxDmg = 100;
+                break;
         }
 
         timer += Time.deltaTime;
@@ -92,7 +103,14 @@ public class PlayerShoot : MonoBehaviour {
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Shoot();
+                if (playerWeapon.weapon != 4)
+                {
+                    Shoot();
+                }
+                else
+                {
+                    ShootGrenade();
+                }
             }
         }
 
@@ -133,6 +151,14 @@ public class PlayerShoot : MonoBehaviour {
                     {
                         hit.collider.gameObject.GetComponent<DamageEnemy>().Damage(minDmg, maxDmg);
                     }
+
+                    if (hit.collider.gameObject.tag == "DeadEnemy")
+                    {
+                        Vector3 dir = hit.collider.transform.position - transform.position;
+                        dir.Normalize();
+
+                        hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(dir * 15);
+                    }
                 }
             }
             else
@@ -146,6 +172,19 @@ public class PlayerShoot : MonoBehaviour {
                     }
                 }
             }
+        }
+    }
+
+    void ShootGrenade()
+    {
+        if (timer >= defTimer)
+        {
+            timer = 0;
+
+            mFlashTimer = 0.1f;
+            muzzleFlash.SetActive(true);
+
+            Instantiate(grenadeLauncherAmmo, muzzleFlash.transform.position, Quaternion.Euler(new Vector3(-75, 0, 0)));
         }
     }
 

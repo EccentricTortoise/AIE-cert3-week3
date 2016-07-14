@@ -70,6 +70,8 @@ public class EnemyMovement : MonoBehaviour {
                 m_NavAgent.Stop();
             }
 
+            transform.LookAt(m_Player.transform);
+
             if (shootDelay > 0)
             {
                 shootDelay -= Time.deltaTime;

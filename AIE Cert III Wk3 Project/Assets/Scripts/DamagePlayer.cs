@@ -3,8 +3,10 @@ using System.Collections;
 
 public class DamagePlayer : MonoBehaviour {
 
-    public float health = 80;
+    public float maxHP = 240;
+    public float health = 240;
     public Camera cam;
+    public Camera miniMap;
 
     public Light lt;
 
@@ -34,8 +36,9 @@ public class DamagePlayer : MonoBehaviour {
             GetComponent<PlayerControls>().enabled = false;
             GetComponent<PlayerShoot>().enabled = false;
             GetComponent<PlayerCamera>().enabled = false;
-            GetComponent<PlayerInteract>().enabled = false;
             cam.GetComponent<PlayerCamera>().enabled = false;
+
+            miniMap.enabled = false;
 
             //unfreeze rigidbody and enable gravity
             GetComponent<Rigidbody>().constraints &= ~RigidbodyConstraints.FreezeRotationX;
@@ -52,8 +55,15 @@ public class DamagePlayer : MonoBehaviour {
 
             Instantiate(GetComponent<PlayerInteract>().gunToInstantiate, transform.position, transform.rotation); //spawns weapon on ground
 
-            GetComponent<PlayerWeapon>().weapon = -1; //removes weapon
+            //removes weapon
+            GetComponent<PlayerWeapon>().pistol.SetActive(false);
+            GetComponent<PlayerWeapon>().machineGun.SetActive(false);
+            GetComponent<PlayerWeapon>().knife.SetActive(false);
+            GetComponent<PlayerWeapon>().sniper.SetActive(false);
+            GetComponent<PlayerWeapon>().grenadeLauncher.SetActive(false);
 
+            GetComponent<PlayerWeapon>().enabled = false;
+            GetComponent<PlayerInteract>().enabled = false;
             GetComponent<RestartScript>().enabled = true;
 
             this.enabled = false; //disables this script
@@ -98,7 +108,7 @@ public class DamagePlayer : MonoBehaviour {
     {
         if (invulTimer == 0)
         {
-            health -= Random.Range(15, 20);
+            //health -= Random.Range(15, 20);
             invulTimer = invulTime;
 
             dmgDisplay = true;
